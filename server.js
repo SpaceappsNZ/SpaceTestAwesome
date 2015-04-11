@@ -16,7 +16,17 @@ app.get('/', function(req,res){
 });
 
 app.get('/getimage', function(req, res){
-  var url = "https://api.data.gov/nasa/planetary/apod?api_key=ONlcOyy6fWLG3B84tPKAFYMxYnFMyemDzD5udkTt&date="+req.query.date;
+  var date = req.query.date;
+  var n = date.search("/");
+  var new_date = '';
+  
+  if (n > -1) {
+	var date_list = date.split("/");
+	var new_date = date_list[2]+ "-" + date_list[1] + "-" + date_list[0];
+  }
+  
+  var url = "https://api.data.gov/nasa/planetary/apod?api_key=ONlcOyy6fWLG3B84tPKAFYMxYnFMyemDzD5udkTt&date="+new_date;
+  
   request(url, function(err, response, body){
     var dataGram = JSON.parse(body);
     console.log(dataGram);
