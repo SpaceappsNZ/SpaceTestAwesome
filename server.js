@@ -31,8 +31,9 @@ app.get('/getimage', function(req, res){
     var filename = url.substring(url.lastIndexOf('/')+1);
 
     request.head(url, function(err, res, body){
-      request(url).pipe(fs.createWriteStream("downloads/" + filename)).on('close', function () {});
+      request(url).pipe(fs.createWriteStream("webpage/downloads/" + filename)).on('close', function () {console.log('finished');});
     });
+    console.log('sent url');
     res.send("http://localhost:8080/" + "downloads/" + filename);
   });
 });

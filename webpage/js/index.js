@@ -28,6 +28,7 @@ function DrawImage(url) {
 	var context = canvas.getContext('2d');
 	var imageObj = new Image();
 	imageObj.addEventListener('load', function () {
+		console.log('blah');
 		context.drawImage(imageObj, 0, 0, screen.width, screen.height );
 		AddText();
 	}, false)
@@ -70,6 +71,3 @@ document.getElementById('download').addEventListener('click', function() {
 	console.log('click');
     downloadCanvas(this, 'imageCanvas', 'image.png');
 }, false);
-
-
-
