@@ -1,0 +1,103 @@
+html {
+	background: url("../images/background.png") no-repeat center center fixed;
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover;
+}
+
+@font-face {
+	font-family: 'HeadingFontBold'; /*a name to be used later*/
+	src: url('../fonts/Montserrat-Bold.otf'); /*URL to font*/
+}
+
+@font-face {
+	font-family: 'HeadingFontHairline'; /*a name to be used later*/
+	src: url('../fonts/Montserrat-Hairline.otf'); /*URL to font*/
+}
+
+input[type=text] {
+	background: black;
+	width: 300px;
+	height: 50px;
+}
+
+h1 {
+	color: white;
+	font-size: 70px;
+	font-family: 'HeadingFontBold';
+	margin-bottom: 20px;
+}
+
+h2 {
+	color: white;
+	font-family: 'HeadingFontBold';
+}
+
+/*start div*/
+.start {
+	margin-top: 100px;
+}
+
+.leftcolumn {
+	float: left;
+	width: 65%;
+}
+
+.rightcolumn {
+	float: right;
+	width: 35%;
+}
+
+.inputs {
+	margin-top: 40px;
+}
+
+.inputs input[type=text] {
+	font-family: 'HeadingFontHairline';
+	margin-top: 25px;
+	font-size:23px;
+	border-radius:0;
+	background-color:#000;
+	color:#fff;
+	text-shadow:0 0 0 rgba(42,42,42,.75);
+	font-weight:400;
+	font-style:none;
+	border-color:#fff;
+	border-style:solid;
+	border-width:2px;
+	padding:4px;
+}
+
+.inputs input[type=text]:focus {
+	outline:none;
+}
+
+.inputs input[type=submit] {
+	font-family: 'HeadingFontBold';
+	height: 56px;
+	font-weight: bold;
+	width: 312px;
+	margin-top: 25px;
+	color: #ffffff;
+	font-size: 30px;
+	background: #000000;
+	border: solid #ffffff 2px;
+	text-decoration: none;
+}
+
+.inputs input[type=submit]:hover {
+	background: #3cb0fd;
+	background-image: -webkit-linear-gradient(top, #3cb0fd, #3498db);
+	background-image: -moz-linear-gradient(top, #3cb0fd, #3498db);
+	background-image: -ms-linear-gradient(top, #3cb0fd, #3498db);
+	background-image: -o-linear-gradient(top, #3cb0fd, #3498db);
+	background-image: linear-gradient(to bottom, #3cb0fd, #3498db);
+	text-decoration: none;
+}
+
+.headingtext {
+	padding-left: 27px;
+}
+
+
