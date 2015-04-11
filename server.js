@@ -16,7 +16,7 @@ app.get('/', function(req,res){
 });
 
 app.get('/getimage', function(req, res){
-  var url = "https://api.data.gov/nasa/planetary/apod?api_key=ONlcOyy6fWLG3B84tPKAFYMxYnFMyemDzD5udkTt&date="+req.params.date;
+  var url = "https://api.data.gov/nasa/planetary/apod?api_key=ONlcOyy6fWLG3B84tPKAFYMxYnFMyemDzD5udkTt&date="+req.query.date;
   request(url, function(err, response, body){
     var dataGram = JSON.parse(body);
     console.log(dataGram);

@@ -3,11 +3,12 @@
     <head>
         <title>Zoid</title>
         <link rel="stylesheet" type="text/css" href="css/index.css">
+        <script src="js/qwest.js"></script>
         <script src="js/index.js"></script>
     </head>
     <body>
         <div class="container">
-            <div class="start" >
+            <div class="start" id="start">
                 <div class="leftcolumn">
                     <div class="headingtext">
                         <h1>PICK A MEMORABLE EVENT. WHEN DID IT HAPPEN?</h1>
@@ -18,11 +19,12 @@
                     <div class="inputs">
                         <input type="text" name="event" placeholder="ie: Johns birthday" id="event"><br>
                         <input type="text" name="date" placeholder="date: 19/12/2013" id="date"><br>
-                        <input type="submit" value="SUBMIT" onclick="testing();">
+                        <input type="submit" value="SUBMIT" onclick="GetImage();">
                     </div>
                 </div>
             </div>
             <div class="spinner"></div>
+            <div class="image" id="image"></div>
             <div class="imageeditor"></div>
         </div>
     </body>
