@@ -16,8 +16,11 @@
     "url": "https://github.com/SpaceappsNZ/SpaceTestAwesome/issues"
   },
   "homepage": "https://github.com/SpaceappsNZ/SpaceTestAwesome",
-  "dependencies" : {
-    "express"    : "latest",
-    "request"    : "latest"
+  "dependencies": {
+    "express": "latest",
+    "request": "latest"
+  },
+  "devDependencies": {
+    "fs": "0.0.2"
   }
 }
