@@ -1,0 +1,19 @@
+module.exports = {
+	//datetime methods
+	validate_date: function  (date) {
+						var n = date.search("/");
+						if (n == 2){
+							return true;
+						} else {
+							return false;
+						}
+					},
+
+	//takes a date of format dd/mm/yyyy and returns a date of format
+	//yyyy-mm-dd
+	format_date: function (date) {
+					var date_list = date.split("/");
+					var new_date = date_list[2] + "-" + date_list[1] + "-" + date_list[0];
+					return new_date;
+				}
+}
