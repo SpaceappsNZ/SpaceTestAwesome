@@ -6,6 +6,12 @@ html {
 	background-size: cover;
 }
 
+{ margin:0; padding:0; } /* to remove the top and left whitespace */
+
+html, body { width:100%; height:100%; } /* just to be sure these are full screen*/
+
+canvas { display:block; }
+
 @font-face {
 	font-family: 'HeadingFontBold'; /*a name to be used later*/
 	src: url('../fonts/Montserrat-Bold.otf'); /*URL to font*/
@@ -100,5 +106,23 @@ h2 {
 	padding-left: 27px;
 }
 
+.rotate {
+
+	/* Safari */
+	-webkit-transform: rotate(-90deg);
+
+	/* Firefox */
+	-moz-transform: rotate(-90deg);
+
+	/* IE */
+	-ms-transform: rotate(-90deg);
+
+	/* Opera */
+	-o-transform: rotate(-90deg);
+
+	/* Internet Explorer */
+	filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
+
+}
 
 
