@@ -38,11 +38,13 @@ app.get('/getimage', function(req, res){
 									'info' : dataGram.title
 								}
 
+			console.time('Downloading');
 			request(url).pipe(fs.createWriteStream("webpage/downloads/" + filename)).on('close', function () {
-
+				console.timeEnd('Downloading');
+				console.time('Processing');
 				processImg(filename, function(){
 					res.send(result);
-					console.log('Done');
+					console.timeEnd('Processing');
 				});
 			});
 		}
