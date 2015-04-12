@@ -30,11 +30,14 @@ app.get('/getimage', function(req, res){
     var url = dataGram.url;
     var filename = url.substring(url.lastIndexOf('/')+1);
 
-    request.head(url, function(err, res, body){
-      request(url).pipe(fs.createWriteStream("webpage/downloads/" + filename)).on('close', function () {console.log('finished');});
+    var result = {
+                  'url' : "http://localhost:8080/" + "downloads/" + filename ,
+                  'info' : dataGram.title
+                }
+
+    request(url).pipe(fs.createWriteStream("webpage/downloads/" + filename)).on('close', function () {
+      res.send(result);
     });
-    console.log('sent url');
-    res.send("http://localhost:8080/" + "downloads/" + filename);
   });
 });
 
