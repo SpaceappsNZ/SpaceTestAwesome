@@ -2,7 +2,7 @@ var size = { height : 800, width: 1280}
 
 var urls = { getImage : 'http://localhost:8080/getimage' };
 
-var imageUrl;
+var imageUrl, imageInfo;
 
 var startPage = true;
 var loading = false;
@@ -23,7 +23,8 @@ function GetImage() {
 		timeout : 10000
 	}).then(function (response) {
 		HideLoader();
-		imageUrl = response;
+		imageUrl = response.url;
+		imageInfo = response.info;
 		finalPage = true;
 		DrawImage();
 	}). catch(function (e, url) {
@@ -52,7 +53,6 @@ function HideLoader() {
 function DrawImage() {
 	if (finalPage) {
 		var url = imageUrl
-		console.log(url);
 		document.getElementById('secondpage').style.display = "";
 		var xScale = Math.max(document.documentElement.clientWidth, window.innerWidth || 0) / size.width;
 		var yScale = Math.max(document.documentElement.clientHeight, window.innerHeight || 0) /size.height;
@@ -65,22 +65,37 @@ function DrawImage() {
 		imageObj.addEventListener('load', function () {
 			context.drawImage(imageObj, 0, 0, canvas.width, canvas.height);
 			AddText();
+			AddInfo(context, minScale);
+			SetupLinks(minScale);
 		}, false)
 		imageObj.src = url;
 		document.getElementsByTagName('html')[0].style.background = 'black';
-		SetupLinks();
 	}
 }
 
-function SetupLinks() {
+function AddInfo(context, scale) {
+	var x, y, width, height;
+	x = 0 * scale;
+	y = 650 * scale;
+	width = size.width * scale;
+	height = 100* scale;
+	context.fillStyle = "rgba(117,117,117, 0.2)";
+	context.fillRect(x, y, width, height);
+	context.fillStyle = "white";
+	context.font = "30px HeadingFontHairline";
+	context.fillText(imageInfo, x + 20, y + height/2 + 10);
+}
+
+function SetupLinks(scale) {
 	var canvas = document.getElementById('imageCanvas');
 	var style = window.getComputedStyle(canvas);
 
 	var links = document.getElementById('links');
-	links.style.right = style.marginRight;
+	links.style.left = (parseFloat(style.marginLeft.replace('px', '')) + parseFloat(style.width.replace('px', '')) - 200) + 'px';
 	links.style.position = 'absolute';
-	links.style.bottom = '3px';
+	links.style.top = (parseFloat(style.marginTop.replace('px', '')) + parseFloat(style.height.replace('px', '')) - (110*scale)) + 'px';
 	links.style.paddingRight = '15px';
+	links.style.paddingBottom = '15px';
 }
 
 function AddText() {
