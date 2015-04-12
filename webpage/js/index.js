@@ -7,15 +7,20 @@ var imageUrl, imageInfo;
 var startPage = true;
 var loading = false;
 var finalPage = false;
+var previousDates = [];
 
-function GetImage() {
-	var date = document.getElementById('date').value;
-	if (date === "") {
-		date = '2012-12-12';
+function GetImage(date) {
+	if (date == null) {
+		var date = document.getElementById('date').value;
+		if (date === "") {
+			date = '2012-12-12';
+		}
 	}
+	console.log(date);
 	document.getElementById('start').style.display = 'none'
 	startPage = false;
 	loading = true;
+	finalPage = false;
 	ShowLoader();
 	qwest.get(urls.getImage, {
 		'date' : date
@@ -27,6 +32,7 @@ function GetImage() {
 		imageInfo = response.info;
 		finalPage = true;
 		DrawImage();
+		previousDates.push(date);
 	}). catch(function (e, url) {
 		console.log(url);
 		console.log(e);
@@ -135,6 +141,28 @@ function downloadCanvas(link, canvasId, filename) {
 	link.download = filename;
 }
 
+function refresh() {
+
+	var randomDate = getRandomDate();
+
+	while (previousDates.indexOf(randomDate) !== -1) {
+		randomDate = getRandomDate();
+	}
+	document.getElementsByTagName('html')[0].style.background = 'url("../images/background.png") no-repeat center center fixed;';
+	document.getElementById('secondpage').style.display = "none";
+	GetImage(randomDate);
+}
+
+function getRandomDate() {
+	var from, to;
+	from = new Date(1995, 6, 16).getTime();
+	to = new Date(2015, 3, 12).getTime();
+
+	var newDate = new Date(from + Math.random() * (to - from));
+
+	return newDate.getFullYear() + "-" + newDate.getMonth() + '-' + newDate.getDate();
+}
+
 /**
  * The event handler for the link's onclick event. We give THIS as a
  * parameter (=the link element), ID of the canvas and a filename.
@@ -142,6 +170,15 @@ function downloadCanvas(link, canvasId, filename) {
 document.getElementById('download').addEventListener('click', function() {
 	console.log('click');
 	downloadCanvas(this, 'imageCanvas', 'image.png');
+}, false);
+
+/**
+ * The event handler for the link's onclick event. We give THIS as a
+ * parameter (=the link element), ID of the canvas and a filename.
+*/
+document.getElementById('refresh').addEventListener('click', function() {
+	console.log('click');
+	refresh()
 }, false);
 
 window.addEventListener('resize', function() {

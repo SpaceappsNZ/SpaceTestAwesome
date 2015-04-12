@@ -24,29 +24,34 @@ app.get('/getimage', function(req, res){
 	var date = req.query.date;
 	url += date;
 
-	var func = function (err, response, body){
+	console.log('----------------------------------------');
+	console.log('Recieved Request for date: ' + date);
 
+	var func = function (err, response, body){
 		var dataGram = JSON.parse(body);
 
 		if (dataGram.error){
 			date = datetime.change_date(date);
 			url = "https://api.data.gov/nasa/planetary/apod?api_key=" + apiKey + "&date="+date;
 			request(url, func);
+			console.log('Could not find image, trying date: ' + date);
 		} else {
+			console.log('Found image');
 			var url = dataGram.url;
 			var filename = url.substring(url.lastIndexOf('/')+1);
 			var result = {
 									'url' : "http://localhost:8080/" + "images/processed/" + filename ,
 									'info' : dataGram.title
 								}
-
-			console.time('Downloading');
+			console.log('Downloading image')
+			console.time('Downloading time:');
 			request(url).pipe(fs.createWriteStream("webpage/downloads/" + filename)).on('close', function () {
-				console.timeEnd('Downloading');
-				console.time('Processing');
+				console.timeEnd('Downloading time:');
+				console.time('Processing time:');
 				processImg(filename, function(){
 					res.send(result);
-					console.timeEnd('Processing');
+					console.timeEnd('Processing time:');
+					console.log('----------------------------------------');
 				});
 			});
 		}
