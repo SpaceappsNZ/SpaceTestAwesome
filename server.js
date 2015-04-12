@@ -11,8 +11,12 @@ var datetime   = require('./datetime.js');
 var fs         = require('fs');
 var lwip       = require('lwip');
 
-var apiKey     = "YLYsT4JXu135uli6a3SofErIksubsEMT2WmMCBTS";
-// var apiKey     = "ONlcOyy6fWLG3B84tPKAFYMxYnFMyemDzD5udkTt";
+
+var blurLevel  = 7;
+var sasturationLevel = 0.4;
+
+// var apiKey     = "YLYsT4JXu135uli6a3SofErIksubsEMT2WmMCBTS";
+var apiKey     = "ONlcOyy6fWLG3B84tPKAFYMxYnFMyemDzD5udkTt";
 
 app.use(express.static(__dirname + '/webpage'));
 
@@ -72,10 +76,15 @@ function resizeBatch (image) {
 		result = result.rotate(90);
 	}
 
-  //check if enlarged
-  if (min(image.width(), image.height())<maxHeight) {
-    //enlarge required
-    return result.cover(maxWidth, maxHeight, "cubic");
+  var scale = Math.min(image.width(), image.height())/maxHeight;
+  if (scale<1) {    //check if enlarged
+    //if too stretched, blur it
+    if(scale < 0.75) {
+      return result.cover(maxWidth, maxHeight, "cubic").blur(blurLevel);  
+    }
+    else {
+      return result.cover(maxWidth, maxHeight, "cubic").blur(0.5);
+    }
   } else{
     //reduce
     return result.cover(maxWidth, maxHeight, "nearest-neighbor");
@@ -84,8 +93,10 @@ function resizeBatch (image) {
 
 function beautifyBatch (image)
 {
-	//saturation
-	return image.batch().saturate(-1);
+  	// if(err) return image.batch().saturate(sasturationLevel);
+   //  else
+    //saturation
+  	return image.batch().saturate(sasturationLevel);//.paste(0,0,overlay);
 }
 
 function processImg (filename, cb) {
@@ -97,13 +108,17 @@ function processImg (filename, cb) {
 		//executes then save to disk
 		resizeTask.exec(function (err, image) {
 			beautifyTask.exec(function (err, image) {
-				image.writeFile("webpage/images/processed/" + filename, function(err){
-					// check err...
-					if (err) console.log(err.message);
-					// done.
+        lwip.open("webpage/images/overlay.png", function(err, overlay){
+          image.paste(0,0,overlay, function(err){
+            image.writeFile("webpage/images/processed/" + filename, function(err){
+              // check err...
+              if (err) console.log(err.message);
+              // done.
 
-					cb();
-				});
+              cb();
+            });
+          });
+        });
 			});
 		});
 	});
