@@ -18,33 +18,38 @@ app.get('/', function(req,res){
 });
 
 app.get('/getimage', function(req, res){
-	var url = "https://api.data.gov/nasa/planetary/apod?api_key=YLYsT4JXu135uli6a3SofErIksubsEMT2WmMCBTS&date=";
+	var url = "https://api.data.gov/nasa/planetary/apod?api_key=ONlcOyy6fWLG3B84tPKAFYMxYnFMyemDzD5udkTt&date=";
 	var date = req.query.date;
 	url += date;
 
-	var func = function (err, response, body){
+	console.log('----------------------------------------');
+	console.log('Recieved Request for date: ' + date);
 
+	var func = function (err, response, body){
 		var dataGram = JSON.parse(body);
 
 		if (dataGram.error){
 			date = datetime.change_date(date);
-			url = "https://api.data.gov/nasa/planetary/apod?api_key=YLYsT4JXu135uli6a3SofErIksubsEMT2WmMCBTS&date="+date;
+			url = "https://api.data.gov/nasa/planetary/apod?api_key=ONlcOyy6fWLG3B84tPKAFYMxYnFMyemDzD5udkTt&date="+date;
 			request(url, func);
+			console.log('Could not find image, trying date: ' + date);
 		} else {
+			console.log('Found image');
 			var url = dataGram.url;
 			var filename = url.substring(url.lastIndexOf('/')+1);
 			var result = {
 									'url' : "http://localhost:8080/" + "images/processed/" + filename ,
 									'info' : dataGram.title
 								}
-
-			console.time('Downloading');
+			console.log('Downloading image')
+			console.time('Downloading time:');
 			request(url).pipe(fs.createWriteStream("webpage/downloads/" + filename)).on('close', function () {
-				console.timeEnd('Downloading');
-				console.time('Processing');
+				console.timeEnd('Downloading time:');
+				console.time('Processing time:');
 				processImg(filename, function(){
 					res.send(result);
-					console.timeEnd('Processing');
+					console.timeEnd('Processing time:');
+					console.log('----------------------------------------');
 				});
 			});
 		}
