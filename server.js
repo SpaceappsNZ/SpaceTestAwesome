@@ -77,9 +77,10 @@ function resizeBatch (image) {
 	}
 
   var scale = Math.min(image.width()/maxWidth, image.height()/maxHeight);
+  console.log(scale);
   if (scale<1) {    //check if enlarged
     //if too stretched, blur it
-    if(scale < 0.75) {
+    if(scale < 0.60) {
       return result.cover(maxWidth, maxHeight, "cubic").blur(blurLevel);
     }
     else {
