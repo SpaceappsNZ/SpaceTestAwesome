@@ -20,10 +20,7 @@ app.get('/getimage', function(req, res){
   var url = "https://api.data.gov/nasa/planetary/apod?api_key=ONlcOyy6fWLG3B84tPKAFYMxYnFMyemDzD5udkTt&date=";
 
   var func = function (err, response, body){
-		var date = '';
-		if (datetime.validate_date(req.query.date)){
-			date = datetime.format_date(req.query.date);
-		}
+		var date = req.query.date;
 
 		url += date;
 
@@ -44,7 +41,7 @@ app.get('/getimage', function(req, res){
                 }
 
 			request(url).pipe(fs.createWriteStream("webpage/downloads/" + filename)).on('close', function () {
-			res.send(result);
+			 res.send(result);
 			});
 		}
 	}
