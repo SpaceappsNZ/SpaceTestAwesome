@@ -18,38 +18,26 @@ app.get('/', function(req,res){
 
 app.get('/getimage', function(req, res){
   var url = "https://api.data.gov/nasa/planetary/apod?api_key=ONlcOyy6fWLG3B84tPKAFYMxYnFMyemDzD5udkTt&date=";
-  
+
   var func = function (err, response, body){
 		var date = '';
 		if (datetime.validate_date(req.query.date)){
 			date = datetime.format_date(req.query.date);
 		}
-		
+
 		url += date;
-		
+
 		var dataGram = JSON.parse(body);
-		//console.log(dataGram);
-		//console.log('hahaha');
 
 		if (dataGram.error){
-			
-				
-			//console.log(dataGram.error);
 			date = datetime.change_date(date);
 			url = "https://api.data.gov/nasa/planetary/apod?api_key=ONlcOyy6fWLG3B84tPKAFYMxYnFMyemDzD5udkTt&date="+date;
-			//datetime.request_another(url, date, res);
 			request(url, func);
 		} else {
-				
-			//bed bug times
-			//console.log('bed bug times');
-			//console.log(dataGram);
+
 			var url = dataGram.url;
 			var filename = url.substring(url.lastIndexOf('/')+1);
 
-			//request.head(url, function(err, res, body){
-			  //request(url).pipe(fs.createWriteStream("webpage/downloads/" + filename)).on('close', function () {console.log('finished');});
-			//});
 			var result = {
                   'url' : "http://localhost:8080/" + "downloads/" + filename ,
                   'info' : dataGram.title
