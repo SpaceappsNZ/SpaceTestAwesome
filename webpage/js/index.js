@@ -11,7 +11,7 @@ var finalPage = false;
 function GetImage() {
 	var date = document.getElementById('date').value;
 	if (date === "") {
-		date = '12/12/2012';
+		date = '2012-12-12';
 	}
 	document.getElementById('start').style.display = 'none'
 	startPage = false;
@@ -103,12 +103,16 @@ function AddText() {
 	var date = document.getElementById('date').value;
 
 	if (date === "") {
-		date = '12/12/2012';
+		date = '2012-12-12';
 	}
 
 	if (textToAdd === "") {
 		textToAdd = "Text here";
 	}
+
+	// formatting date
+	var dateSplit = date.split('-');
+	var formattedDate = dateSplit[2] + '/' + dateSplit[1] + '/' + dateSplit[0];
 
 	var canvas = document.getElementById('imageCanvas');
 	var context = canvas.getContext('2d');
@@ -120,10 +124,10 @@ function AddText() {
 	context.fillText(textToAdd, x , y);
 	context.font = "50px HeadingFontHairline";
 
-	x = canvas.width/2 - context.measureText(date).width/2;
+	x = canvas.width/2 - context.measureText(formattedDate).width/2;
 	y = canvas.height/2 - 70/2 + 10;
 
-	context.fillText(date, x, y);
+	context.fillText(formattedDate, x, y);
 }
 
 function downloadCanvas(link, canvasId, filename) {
