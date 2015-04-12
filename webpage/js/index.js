@@ -85,7 +85,7 @@ function AddInfo(context, scale) {
 	y = 650 * scale;
 	width = size.width * scale;
 	height = 100* scale;
-	context.fillStyle = "rgba(117,117,117, 0.2)";
+	context.fillStyle = "rgba(0,0,0, 0.3)";
 	context.fillRect(x, y, width, height);
 	context.fillStyle = "white";
 	context.font = "30px HeadingFontHairline";
@@ -160,7 +160,7 @@ function getRandomDate() {
 
 	var newDate = new Date(from + Math.random() * (to - from));
 
-	return newDate.getFullYear() + "-" + newDate.getMonth() + '-' + newDate.getDate();
+	return newDate.getFullYear() + "-" + (newDate.getMonth()+1) + '-' + newDate.getDate();
 }
 
 /**
