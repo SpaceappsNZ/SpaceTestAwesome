@@ -11,6 +11,8 @@ var datetime   = require('./datetime.js');
 var fs         = require('fs');
 var lwip       = require('lwip');
 
+var apiKey     = "YLYsT4JXu135uli6a3SofErIksubsEMT2WmMCBTS";
+
 app.use(express.static(__dirname + '/webpage'));
 
 app.get('/', function(req,res){
@@ -18,7 +20,7 @@ app.get('/', function(req,res){
 });
 
 app.get('/getimage', function(req, res){
-	var url = "https://api.data.gov/nasa/planetary/apod?api_key=YLYsT4JXu135uli6a3SofErIksubsEMT2WmMCBTS&date=";
+	var url = "https://api.data.gov/nasa/planetary/apod?api_key=" + apiKey + "&date=";
 	var date = req.query.date;
 	url += date;
 
@@ -28,7 +30,7 @@ app.get('/getimage', function(req, res){
 
 		if (dataGram.error){
 			date = datetime.change_date(date);
-			url = "https://api.data.gov/nasa/planetary/apod?api_key=YLYsT4JXu135uli6a3SofErIksubsEMT2WmMCBTS&date="+date;
+			url = "https://api.data.gov/nasa/planetary/apod?api_key=" + apiKey + "&date="+date;
 			request(url, func);
 		} else {
 			var url = dataGram.url;
@@ -64,9 +66,14 @@ function resizeBatch (image) {
 		result = result.rotate(90);
 	}
 
-	//crop or scale -> blur
-	//resize does not retain aspect
-	return result.cover(maxWidth, maxHeight);
+  //check if enlarged
+  if (min(image.width(), image.height())<maxHeight) {
+    //enlarge required
+    return result.cover(maxWidth, maxHeight, "cubic");
+  } else{
+    //reduce
+    return result.cover(maxWidth, maxHeight, "nearest-neighbor");
+  };
 }
 
 function beautifyBatch (image)
