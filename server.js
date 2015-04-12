@@ -11,8 +11,8 @@ var datetime   = require('./datetime.js');
 var fs         = require('fs');
 var lwip       = require('lwip');
 
-var apiKey     = "YLYsT4JXu135uli6a3SofErIksubsEMT2WmMCBTS";
-// var apiKey     = "ONlcOyy6fWLG3B84tPKAFYMxYnFMyemDzD5udkTt";
+// var apiKey     = "YLYsT4JXu135uli6a3SofErIksubsEMT2WmMCBTS";
+var apiKey     = "ONlcOyy6fWLG3B84tPKAFYMxYnFMyemDzD5udkTt";
 
 app.use(express.static(__dirname + '/webpage'));
 
@@ -49,11 +49,11 @@ app.get('/getimage', function(req, res){
 			request(url).pipe(fs.createWriteStream("webpage/downloads/" + filename)).on('close', function () {
 				console.timeEnd('Downloading time:');
 				console.time('Processing time:');
-				processImg(filename, function(){
+				// processImg(filename, function(){
 					res.send(result);
 					console.timeEnd('Processing time:');
 					console.log('----------------------------------------');
-				});
+				// });
 			});
 		}
 	}
