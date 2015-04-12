@@ -76,11 +76,11 @@ function resizeBatch (image) {
 		result = result.rotate(90);
 	}
 
-  var scale = Math.min(image.width(), image.height())/maxHeight;
+  var scale = Math.min(image.width()/maxWidth, image.height()/maxHeight);
   if (scale<1) {    //check if enlarged
     //if too stretched, blur it
     if(scale < 0.75) {
-      return result.cover(maxWidth, maxHeight, "cubic").blur(blurLevel);  
+      return result.cover(maxWidth, maxHeight, "cubic").blur(blurLevel);
     }
     else {
       return result.cover(maxWidth, maxHeight, "cubic").blur(0.5);
