@@ -49,11 +49,11 @@ app.get('/getimage', function(req, res){
 			request(url).pipe(fs.createWriteStream("webpage/downloads/" + filename)).on('close', function () {
 				console.timeEnd('Downloading time:');
 				console.time('Processing time:');
-				// processImg(filename, function(){
+				processImg(filename, function(){
 					res.send(result);
 					console.timeEnd('Processing time:');
 					console.log('----------------------------------------');
-				// });
+				});
 			});
 		}
 	}
@@ -73,7 +73,7 @@ function resizeBatch (image) {
 	}
 
   //check if enlarged
-  if (min(image.width(), image.height())<maxHeight) {
+  if (Math.min(image.width(), image.height())<maxHeight) {
     //enlarge required
     return result.cover(maxWidth, maxHeight, "cubic");
   } else{
@@ -85,7 +85,7 @@ function resizeBatch (image) {
 function beautifyBatch (image)
 {
 	//saturation
-	return image.batch().saturate(-1);
+	return image.batch().saturate(0);
 }
 
 function processImg (filename, cb) {
