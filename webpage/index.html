@@ -17,8 +17,8 @@
                 </div>
                 <div class="rightcolumn">
                     <div class="inputs">
-                        <input type="text" name="event" placeholder="ie: Johns birthday" id="event"><br>
-                        <input type="text" name="date" placeholder="date: 19/12/2013" id="date"><br>
+                        <input type="text" name="event" placeholder="ie: Johns birthday" id="event" autocomplete="on"><br>
+                        <input type="text" name="date" placeholder="date: 19/12/2013" id="date" autocomplete="on"><br>
                         <input type="submit" value="SUBMIT" onclick="GetImage();">
                     </div>
                 </div>
@@ -28,8 +28,11 @@
                 <div class="dot2"></div>
             </div>
             <div class="secondpage" id="secondpage" style="display:none">
-                <canvas class="imageCanvas" id="imageCanvas" style="position:absolute"></canvas>
-                <div style="position:absolute;right:10px;bottom:5px;">
+                <canvas class="imageCanvas" id="imageCanvas"></canvas>
+                <div id='links'>
+                    <a id="facebook" href="#"><img class="icons" src="images/facebook.png"></a>
+                    <a id="twitter" href="#"><img class="icons" src="images/twitter.png"></a>
+                    <a id="refresh" href="#"><img class="icons" src="images/refresh.png"></a>
                     <a id="download" href="#"><img class="icons" src="images/download.png"></a>
                 </div>
             </div>

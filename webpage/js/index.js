@@ -1,66 +1,119 @@
+var size = { height : 800, width: 1280}
 
 var urls = { getImage : 'http://localhost:8080/getimage' };
 
+var imageUrl;
+
+var startPage = true;
+var loading = false;
+var finalPage = false;
+
 function GetImage() {
 	var date = document.getElementById('date').value;
-
+	if (date === "") {
+		date = '12/12/2012';
+	}
 	document.getElementById('start').style.display = 'none'
-	var loader = document.getElementById('loader');
-	loader.style.display = '';
-	loader.style.marginTop = (screen.height/2 - 100) + "px";
-
+	startPage = false;
+	loading = true;
+	ShowLoader();
 	qwest.get(urls.getImage, {
 		'date' : date
+	}, {
+		timeout : 10000
 	}).then(function (response) {
-		document.getElementById('loader').style.display = 'none'
-		DrawImage(response);
+		HideLoader();
+		imageUrl = response;
+		finalPage = true;
+		DrawImage();
 	}). catch(function (e, url) {
+		console.log(url);
+		console.log(e);
 		console.log("error");
 	});
 }
 
-function DrawImage(url) {
-	console.log(url);
-	document.getElementById('secondpage').style.display = "";
+function ShowLoader(){
+	if (loading) {
+		var loader = document.getElementById('loader');
+		loader.style.display = '';
+		loader.style.marginTop = (Math.max(document.documentElement.clientHeight, window.innerHeight || 0)/2 - 10) + "px";
+	}
+}
+
+function HideLoader() {
+	if (loading) {
+		var loader = document.getElementById('loader');
+		loader.style.display = 'none';
+		loading = false;
+	}
+}
+
+function DrawImage() {
+	if (finalPage) {
+		var url = imageUrl
+		console.log(url);
+		document.getElementById('secondpage').style.display = "";
+		var xScale = Math.max(document.documentElement.clientWidth, window.innerWidth || 0) / size.width;
+		var yScale = Math.max(document.documentElement.clientHeight, window.innerHeight || 0) /size.height;
+		var minScale = Math.min(xScale, yScale)
+		var canvas = document.getElementById('imageCanvas');
+		canvas.height = size.height * minScale;
+		canvas.width = size.width * minScale;
+		var context = canvas.getContext('2d');
+		var imageObj = new Image();
+		imageObj.addEventListener('load', function () {
+			context.drawImage(imageObj, 0, 0, canvas.width, canvas.height);
+			AddText();
+		}, false)
+		imageObj.src = url;
+		document.getElementsByTagName('html')[0].style.background = 'black';
+		SetupLinks();
+	}
+}
+
+function SetupLinks() {
 	var canvas = document.getElementById('imageCanvas');
-	canvas.height = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
-	canvas.width = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
-	var context = canvas.getContext('2d');
-	var imageObj = new Image();
-	imageObj.addEventListener('load', function () {
-		console.log('blah');
-		context.drawImage(imageObj, 0, 0, screen.width, screen.height );
-		AddText();
-	}, false)
-	imageObj.src = url;
+	var style = window.getComputedStyle(canvas);
+
+	var links = document.getElementById('links');
+	links.style.right = style.marginRight;
+	links.style.position = 'absolute';
+	links.style.bottom = '3px';
+	links.style.paddingRight = '15px';
 }
 
 function AddText() {
 	var textToAdd = document.getElementById('event').value;
 	var date = document.getElementById('date').value;
+
+	if (date === "") {
+		date = '12/12/2012';
+	}
+
+	if (textToAdd === "") {
+		textToAdd = "Text here";
+	}
+
 	var canvas = document.getElementById('imageCanvas');
 	var context = canvas.getContext('2d');
 	context.font = "70px HeadingFontBold";
 
-	var x = screen.width/2 - context.measureText(textToAdd).width/2;
-	var y = screen.height/2 - 70/2 - 50;
+	var x = canvas.width/2 - context.measureText(textToAdd).width/2;
+	var y = canvas.height/2 - 70/2 - 50;
 	context.fillStyle = "white";
 	context.fillText(textToAdd, x , y);
 	context.font = "50px HeadingFontHairline";
 
-	x = screen.width/2 - context.measureText(date).width/2;
-	y = screen.height/2 - 70/2 + 10;
+	x = canvas.width/2 - context.measureText(date).width/2;
+	y = canvas.height/2 - 70/2 + 10;
 
 	context.fillText(date, x, y);
 }
 
-function DownloadFile() {
-
-}
-
 function downloadCanvas(link, canvasId, filename) {
-    link.href = document.getElementById(canvasId).toDataURL();
-    link.download = filename;
+	link.href = document.getElementById(canvasId).toDataURL();
+	link.download = filename;
 }
 
 /**
@@ -69,5 +122,10 @@ function downloadCanvas(link, canvasId, filename) {
 */
 document.getElementById('download').addEventListener('click', function() {
 	console.log('click');
-    downloadCanvas(this, 'imageCanvas', 'image.png');
+	downloadCanvas(this, 'imageCanvas', 'image.png');
 }, false);
+
+window.addEventListener('resize', function() {
+	ShowLoader();
+	DrawImage();
+}, true);
