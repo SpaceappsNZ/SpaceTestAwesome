@@ -3,45 +3,78 @@ var fs = require('fs');
 var request = require('request');
 var cheerio = require('cheerio');
 var app     = express();
+var datetime = require('./datetime.js');
+var parsedurl = [];
 
 app.get('/', function(req, res){
 
-url = 'http://nssdc.gsfc.nasa.gov/imgcat/';
+  url = ['http://nssdc.gsfc.nasa.gov/imgcat/thumbnail_pages/earth_thumbnails.html',
+          'http://nssdc.gsfc.nasa.gov/imgcat/thumbnail_pages/moon_thumbnails.html',
+          'http://nssdc.gsfc.nasa.gov/imgcat/thumbnail_pages/venus_thumbnails.html',
+          'http://nssdc.gsfc.nasa.gov/imgcat/thumbnail_pages/mars_thumbnails.html',
+          'http://nssdc.gsfc.nasa.gov/imgcat/thumbnail_pages/mercury_thumbnails.html',
+          'http://nssdc.gsfc.nasa.gov/imgcat/thumbnail_pages/mars_sat_thumbnails.html',
+          'http://nssdc.gsfc.nasa.gov/imgcat/thumbnail_pages/asteroid_thumbnails.html',
+          'http://nssdc.gsfc.nasa.gov/imgcat/thumbnail_pages/jupiter_thumbnails.html',
+          'http://nssdc.gsfc.nasa.gov/imgcat/thumbnail_pages/jupiter_sat_thumbnails.html',
+          'http://nssdc.gsfc.nasa.gov/imgcat/thumbnail_pages/saturn_thumbnails.html',
+          'http://nssdc.gsfc.nasa.gov/imgcat/thumbnail_pages/saturn_sat_thumbnails.html',
+          'http://nssdc.gsfc.nasa.gov/imgcat/thumbnail_pages/comet_thumbnails.html'];
 
-request(url, function(error, response, html){
-    if(!error && response.statusCode == 200){
-        var $ = cheerio.load(html);
+  for(var i = 0; i < url.length; i++){
+    request(url[i], function(error, response, html){
+        if(!error && response.statusCode == 200){
+            var $ = cheerio.load(html);
 
-        var time, url;
-        var json = { time : "", url : ""};
+            var parsedResults = [];
 
-        var parsedResults = [];
+            $('a').each(function(index){
 
-        $('a').each(function(index){
-          console.log($(this).attr('href'));
-        });
+            parsedurl.push($(this).attr('href'));
 
+            });
+        }
 
-    }
-
-// To write to the system we will use the built in 'fs' library.
-// In this example we will pass 3 parameters to the writeFile function
-// Parameter 1 :  output.json - this is what the created filename will be called
-// Parameter 2 :  JSON.stringify(json, null, 4) - the data to write, here we do an extra step by calling JSON.stringify to make our JSON easier to read
-// Parameter 3 :  callback function - a callback function to let us know the status of our function
-
-fs.writeFile('output.json', JSON.stringify(json, null, 4), function(err){
-
-    console.log('File successfully written! - Check your project directory for the output.json file');
-
+    });
+  }
+  res.send('Check your console!')
 })
 
-// Finally, we'll just send out a message to the browser reminding you that this app does not have a UI.
-res.send('Check your console!')
+app.get('/getimages', function(req, res){
+  for(var i = 0; i < parsedurl.length; i++){
+    var jsonArray = [];
+    request(parsedurl[i], function(error, response, html){
+        if(!error && response.statusCode == 200){
+            var $ = cheerio.load(html);
+            var title, url, date;
+            var json = { title : "", date : "", url : ""}
 
-    }) ;
+
+            json.url = "http://nssdc.gsfc.nasa.gov"+$('img').attr('src');
+            date = $('p').text()
+            var indx = date.indexOf("Date/Time (UT):");
+            var ignoreCase = date.indexOf("N/A");
+
+            json.date = date.substring(indx+16,indx+16+10);
+
+
+
+            json.title = $('h1').text();
+            jsonArray.push(json);
+            //console.log(jsonArray);
+        }
+
+        fs.writeFile('output.json', JSON.stringify(jsonArray), function(err){
+
+            //console.log('File successfully written! - Check your project directory for the output.json file');
+
+        })
+
+    });
+
+  }
+  res.send('Stored images and dates')
 })
-
 app.listen('8081')
 
 console.log('Magic happens on port 8081');
