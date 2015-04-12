@@ -3,7 +3,7 @@ module.exports = {
 	validate_date: function  (date) {
 						var n = date.search("/");
 						var m = date.search("-");
-						if (n == 2 or m == 2){
+						if (n == 2 || m == 2){
 							return true;
 						} else {
 							return false;
